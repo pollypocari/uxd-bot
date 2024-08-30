@@ -11,6 +11,7 @@ LINE_CHANNEL_SECRET = os.environ['LINE_CHANNEL_SECRET']
 SOURCE_URL_PREFIX = os.environ['SOURCE_URL_PREFIX']
 TARGET_URL_PREFIX = os.environ['TARGET_URL_PREFIX']
 URL_SUFFIX = os.environ['URL_SUFFIX']
+RESPONSE_MESSAGE_TEMPLATE = os.environ['RESPONSE_MESSAGE_TEMPLATE']
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
@@ -19,7 +20,7 @@ handler = WebhookHandler(LINE_CHANNEL_SECRET)
 def callback():
     signature = request.headers['X-Line-Signature']
     body = request.get_data(as_text=True)
-
+    
     try:
         handler.handle(body, signature)
     except Exception as e:
@@ -37,9 +38,10 @@ def handle_message(event):
     text = event.message.text
     if text.startswith(SOURCE_URL_PREFIX) and text.endswith(URL_SUFFIX):
         converted_url = convert_url(text)
+        response_message = RESPONSE_MESSAGE_TEMPLATE.format(url=converted_url)
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=converted_url)
+            TextSendMessage(text=response_message)
         )
 
 def convert_url(url):
