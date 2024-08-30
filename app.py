@@ -38,7 +38,7 @@ def handle_message(event):
     text = event.message.text
     if text.startswith(SOURCE_URL_PREFIX) and text.endswith(URL_SUFFIX):
         converted_url = convert_url(text)
-        response_message = RESPONSE_MESSAGE_TEMPLATE.format(url=converted_url)
+        response_message = RESPONSE_MESSAGE_TEMPLATE.format(url=converted_url).replace("\\n", "\n")
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=response_message)
