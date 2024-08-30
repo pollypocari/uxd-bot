@@ -31,7 +31,7 @@ def callback():
 
 @app.route("/")
 def hello():
-    return "Hello, World!"
+    return "ↀᴥↀ"
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
